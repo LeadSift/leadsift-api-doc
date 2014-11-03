@@ -1,0 +1,188 @@
+FORMAT: 1A
+HOST: https://api.leadsift.com/api/1/
+
+# LeadSift API
+
+## Overview
+The **LeadSift** platform uses advanced natural language processing techniques to detect demographic and consumer data about social 
+media users.  This document describes the **LeadSift API**, a REST-based service that delivers these insights using standard HTTP 
+semantics via resource-oriented URLs.  We use built-in HTTP features, including HTTP authentication and HTTP verbs, which are
+easily handled using common client libraries across a range of programming languages.
+
+## Authentication
+The **LeadSift API** currently supports _Token-based_ authentication.  This method requires that clients supply an authentication
+token, which must be supplied using the _Authorization_ header.  **Authentication is required for all API requests.**
+
+In addtion, **all requests must be made over HTTPS**.  Calls made over plain HTTP will fail.
+
+## Request/Response Flows
+There are two modes for developers to be aware of - **standard** and **webhook**.
+
+### Standard
+This is the flow that occurs when the **webhook_url** parameter is _not_ provided.  In this scenario, the user will receive one of
+three possible non-error status codes and corresponding payloads:
+
+* **200 OK** : The user was found in our data store, and is returned in the response payload as JSON.
+* **202 Accepted** : The user was _not_ found in our data store.  In this instance, we accept the user for processing - the client should
+            attempt to fetch the user again later.
+* **404 Not Found** : The user has requested previously, but was found to be invalid (doesn't exist, marked as private, etc.).  New requests for
+            that user should be made 24 hours later.
+
+### Webhook
+When the **webhook_url** is provided, one non-error status code is returned:
+
+* **202 Accepted** : The user is accepted for processing.
+
+This mode will trigger an HTTP POST of the result payload to a callback url specified by **webhook_url**.
+Note that the system will make up to 3 attempts to reach **webhook_url** - if the url cannot be reached after 3 attempts, the request
+will be dropped.  For development and testing purposes, we recommend using a service like [Requestb.in](http://requestb.in/) to create a temporary callback url.
+
+## Errors
+Conventional HTTP response codes are used to indicate success or failure of an API request. In general, codes in the 2xx range
+indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter
+was missing), and codes in the 5xx range indicate an error with LeadSift's servers.
+
+#### HTTP Status code summary
+* **200 OK** : A user has been found and is returned in the response body.
+* **202 Accepted** : The user has been accepted for processing.
+* **400 Bad Request** : Often missing a required parameter.
+* **401 Unauthorized** : No valid API key provided.
+* **402 Request Failed** : Parameters were valid but request failed.
+* **403 Forbidden** : The user is not permitted to perform the requested action.
+* **404 Not Found** : The requested item doesn't exist.
+* **500, 502, 503, 504** : Server errors - something went wrong on our end.
+
+#### Error Payloads
+When a **webhook_url** is provided, an error condition arising during processing will result in an 
+error document being POST'ed to the callback url.  For example, a _user not found_ error could send a
+document like this to your callback url, given a **user_id** of _123456789_:
+
+    {
+        "status": 404,
+        "info": {
+            "message": "'123456789' not found - try again in 24 hours",
+            "type": "not_found",
+            "param": "user_id"
+        }
+    }
+
+
+#### Error types
+* **not_found** : User not found
+* **private_account** : User profile marked as private
+* **server_error** : Internal server error
+* **missing_parameter** : A required parameter is missing
+* **invalid_parameter** : An invalid parameter was supplied
+
+
+# Group Insights
+These endpoints deliver demographic and consumer data for users of various social media networks.
+
+## Twitter User Insights [/insights/twitter{?user_id,webhook_url,webhook_id}]
+### Fetch consumer insights for a Twitter user [GET]
++ Parameters
+    + user_id (required, string, `515978659`) ... Twitter user id to be processed.
+    + webhook_url (optional, string, `http%3A%2F%2Fwww.example.com%2Fwebhook%2F`) ... Webhook URL - if provided, the result will be sent via HTTP POST to the url.  Must be URL-encoded.
+    + webhook_id (optional, string, `abc123`) ... Identifer sent along with result to the webhook url.  Must be URL-encoded
++ Request
+    + Headers
+    
+                Authorization: Token yourtoken
+
++ Response 200 (application/json)
+    + Body
+
+            {
+              "status": 200,
+              "info": {
+                "message": "ok"
+              },
+              "data": {
+                "leadsift": {
+                  "brand_mentions": [],
+                  "features": {
+                    "is_corporate": false,
+                    "interests": [
+                      {
+                        "text": "politics"
+                      },
+                      {
+                        "text": "science"
+                      },
+                      {
+                        "text": "technology"
+                      },
+                      {
+                        "text": "business"
+                      },
+                      {
+                        "text": "automobiles"
+                      }
+                    ],
+                    "lifestyle": [],
+                    "active_time": "AFTERNOON",
+                    "gender": "unknown",
+                    "age": "unknown",
+                    "has_car": false,
+                    "is_adult": true,
+                    "devices": {
+                      "desktop": {
+                        "stats": {
+                          "count": 1
+                        }
+                      }
+                    },
+                    "life_events": [],
+                    "has_house": false,
+                    "is_influencer": true,
+                    "brands": [
+                      {
+                        "category": "other",
+                        "id": "twitter"
+                      },
+                      {
+                        "category": "products",
+                        "id": "volkswagen"
+                      },
+                      {
+                        "category": "websites",
+                        "id": "mashable"
+                      }
+                    ],
+                    "is_teenager": false,
+                    "professions": [],
+                    "has_pet": false
+                  }
+                },
+                "data": {
+                  "author": {
+                    "username": "leadsift",
+                    "bio": "Social Media Lead Generation & Identification Platform. An easy to use software that enables businesses to find and engage with relevant leads on Social Media.",
+                    "stats": {
+                      "friends": 362,
+                      "followers": 958,
+                      "statuses": 1344
+                    },
+                    "name": "LeadSift",
+                    "link": "https://twitter.com/leadsift",
+                    "location": {
+                      "text": "Halifax, Nova Scotia",
+                      "details": {
+                        "city": "Halifax",
+                        "geonameid": "6324729",
+                        "country": "Canada",
+                        "state": "Nova Scotia",
+                        "country_code": "CA",
+                        "state_code": "NS",
+                        "type": "city"
+                      }
+                    },
+                    "id": "515978659",
+                    "avatar": {
+                      "https": "https://pbs.twimg.com/profile_images/378800000186360874/bafa400a1cc0273f0ef6c3753cb7abba.jpeg"
+                    }
+                  }
+                }
+              },
+              "request_id": "00000000-0000-0000-0000-000000000000"
+            }
