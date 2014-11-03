@@ -13,7 +13,7 @@ easily handled using common client libraries across a range of programming langu
 The **LeadSift API** currently supports _Token-based_ authentication.  This method requires that clients supply an authentication
 token, which must be supplied using the _Authorization_ header.  **Authentication is required for all API requests.**
 
-In addtion, **all requests must be made over HTTPS**.  Calls made over plain HTTP will fail.
+In addition, **all requests must be made over HTTPS**.  Calls made over plain HTTP will fail.
 
 ## Request/Response Flows
 There are two modes for developers to be aware of - **standard** and **webhook**.
@@ -83,7 +83,7 @@ These endpoints deliver demographic and consumer data for users of various socia
 + Parameters
     + user_id (required, string, `515978659`) ... Twitter user id to be processed.
     + webhook_url (optional, string, `http%3A%2F%2Fwww.example.com%2Fwebhook%2F`) ... Webhook URL - if provided, the result will be sent via HTTP POST to the url.  Must be URL-encoded.
-    + webhook_id (optional, string, `abc123`) ... Identifer sent along with result to the webhook url.  Must be URL-encoded
+    + webhook_id (optional, string, `abc123`) ... Identifier sent along with result to the webhook url.  Must be URL-encoded
 + Request
     + Headers
     
