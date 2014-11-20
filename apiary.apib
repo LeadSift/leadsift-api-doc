@@ -193,6 +193,89 @@ which makes them somewhat less reliable than user ids.
 ## Instagram User Insights [/insights/twitter{?webhook_url,webhook_id}]
 ### Deliver consumer insights for a Instagram user [POST]
 This endpoint requires clients to supply a webhook URL for results to be POST'ed to. The request should be sent with a JSON document payload containing data for the Instagram user to be processed.  The document supplied should adhere to the JSON request schema.
+#### Input JSON Schema
+
+    {
+      "required": true,
+      "properties": {
+        "posts": {
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "required": true,
+                "type": "string",
+                "description": "Post content"
+              },
+              "created_at": {
+                "required": true,
+                "type": "number",
+                "description": "Post's creation time as a UNIX timestamp"
+              },
+              "id": {
+                "required": true,
+                "minLength": 1,
+                "type": "string",
+                "description": "ID for this post, if provided by the social network"
+              }
+            }
+          },
+          "additionalItems": false,
+          "required": true,
+          "type": "array",
+          "description": "Posts for this social media user"
+        },
+        "user": {
+          "required": true,
+          "type": "object",
+          "description": "User information",
+          "properties": {
+            "username": {
+              "minLength": 1,
+              "required": true,
+              "type": "string",
+              "description": "Screen name for the user"
+            },
+            "bio": {
+              "required": false,
+              "type": "string",
+              "description": "User description, if provided"
+            },
+            "name": {
+              "minLength": 1,
+              "required": true,
+              "type": "string",
+              "description": "User's real name"
+            },
+            "created_at": {
+              "required": false,
+              "type": "number",
+              "description": "User's creation time as a UNIX timestamp"
+            },
+            "website": {
+              "required": false,
+              "type": "string",
+              "description": "User's website"
+            },
+            "avatar": {
+              "required": false,
+              "type": "string",
+              "description": "User profile image"
+            },
+            "id": {
+              "minLength": 1,
+              "required": true,
+              "type": "string",
+              "description": "User ID supplied by social media network"
+            }
+          }
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http: //json-schema.org/draft-03/schema",
+      "type": "object",
+      "id": "#"
+    }
 
 + Parameters
     + webhook_url (required, string, `http%3A%2F%2Fwww.example.com%2Fwebhook%2F`) ... Webhook URL - the result will be sent via HTTP POST to the url.  Must be URL-encoded.
