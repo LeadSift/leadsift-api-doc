@@ -190,7 +190,7 @@ which makes them somewhat less reliable than user ids.
               "request_id": "00000000-0000-0000-0000-000000000000"
             }
 
-## Instagram User Insights [/insights/twitter{?webhook_url,webhook_id}]
+## Instagram User Insights [/insights/instagram{?webhook_url,webhook_id}]
 ### Deliver consumer insights for a Instagram user [POST]
 This endpoint requires clients to supply a webhook URL for results to be POST'ed to. The request should be sent with a JSON document payload containing data for the Instagram user to be processed.  The document supplied should adhere to the JSON request schema.
 #### Input JSON Schema
@@ -294,12 +294,12 @@ This endpoint requires clients to supply a webhook URL for results to be POST'ed
                         "username": "johndoe",
                         "name": "John Doe",
                         "bio": "Biography of John Doe",
-                        "created": 123456789
+                        "created_at": 123456789
                         "website": "http://www.example.com",
                     },
                     "posts": [
-                        { "text": "Hello World", "created": 1212121212 },
-                        { "text": "Testing, Testing, 1, 2, 3", "created": 123456789 }
+                        { "id": "1", "text": "Hello World", "created_at": 1212121212 },
+                        { "id": "2", "text": "Testing, Testing, 1, 2, 3", "created_at": 123456789 }
                     ]
                 }
 
@@ -390,3 +390,167 @@ This endpoint requires clients to supply a webhook URL for results to be POST'ed
 
 + Response 202 (application/json)
     + Body
+    
+## Batch Requests [/batch]
+### Run several requests in a batch [POST]
+The Batch Requests endpoint allows you to batch several API requests into a single request.  This endpoint will proxy up to 20 requests per batch for any
+other endpoint that accepts GET requests.  Any invalid endpoints (incorrect hostname, invalid endpoint, etc.) will be ignored.
+
++ Request
+    + Headers
+    
+                Authorization: Token yourtoken
+                Content-Type:  application/json
+
+    + Body
+
+                {
+                    "requests": [
+                        "https://api.leadsift.com/1/insights/twitter?username=leadsift",
+                        "https://api.leadsift.com/1/insights/twitter?username=twitter"
+                    ]
+                }
+
++ Response 200 (application/json)
+    + Body
+    
+                {u'data': {u'responses': [{u'data': {u'data': {u'author': {u'avatar': {u'http': u'http://pbs.twimg.com/profile_images/378800000186360874/bafa400a1cc0273f0ef6c3753cb7abba_normal.jpeg',
+                        u'https': u'https://pbs.twimg.com/profile_images/378800000186360874/bafa400a1cc0273f0ef6c3753cb7abba_normal.jpeg'},
+                       u'bio': u'Helping Brands Identify, Understand and Reach Consumers from Social Media.',
+                       u'contributors': False,
+                       u'created_at': u'2012-03-05T23:34:31',
+                       u'id': u'515978659',
+                       u'language': u'en',
+                       u'link': u'https://twitter.com/leadsift',
+                       u'location': {u'details': {u'city': u'Halifax',
+                         u'continent_code': u'NA',
+                         u'country': u'Canada',
+                         u'country_code': u'CA',
+                         u'geonameid': u'6324729',
+                         u'population': 359111,
+                         u'score': 121,
+                         u'state': u'Nova Scotia',
+                         u'state_code': u'NS',
+                         u'type': u'city'},
+                        u'text': u'Halifax, Nova Scotia'},
+                       u'name': u'LeadSift',
+                       u'stats': {u'favorites': 0,
+                        u'followers': 1059,
+                        u'friends': 408,
+                        u'listed_count': 61,
+                        u'statuses': 1415},
+                       u'status': u'active',
+                       u'timezone': {u'name': u'Atlantic Time (Canada)',
+                        u'utc_offset': -14400},
+                       u'urls': [],
+                       u'username': u'leadsift',
+                       u'verified': False,
+                       u'website': u'http://www.leadsift.com'}},
+                     u'leadsift': {u'features': {u'active_time': u'MORNING',
+                       u'age': u'50+',
+                       u'brands': [{u'category': u'other', u'id': u'twitter'},
+                        {u'category': u'websites', u'id': u'bleacher_report'}],
+                       u'devices': {u'desktop': {u'stats': {u'count': 1, u'ratio': 1.0}}},
+                       u'gender': u'unknown',
+                       u'has_car': False,
+                       u'has_family': False,
+                       u'has_house': False,
+                       u'has_job': False,
+                       u'has_kid': False,
+                       u'has_pet': False,
+                       u'interests': [{u'text': u'science'},
+                        {u'text': u'travel'},
+                        {u'text': u'music'},
+                        {u'text': u'business'},
+                        {u'text': u'politics'}],
+                       u'is_corporate': True,
+                       u'is_influencer': True,
+                       u'is_married': False,
+                       u'is_personal': False,
+                       u'is_teenager': False,
+                       u'life_events': [],
+                       u'lifestyle': [{u'text': u'excitable'}, {u'text': u'hni'}],
+                       u'professions': []}}},
+                    u'info': {u'message': u'ok'},
+                    u'request_id': u'78e7bf42-352f-46b7-9ba8-ea82b883ff0f',
+                    u'status': 200},
+                   {u'data': {u'data': {u'author': {u'avatar': {u'http': u'http://pbs.twimg.com/profile_images/530553072594874368/7f9QErOD_normal.png',
+                        u'https': u'https://pbs.twimg.com/profile_images/530553072594874368/7f9QErOD_normal.png'},
+                       u'bio': u'Your official source for news, updates and tips from Twitter, Inc.',
+                       u'contributors': False,
+                       u'created_at': u'2007-02-20T14:35:54',
+                       u'id': u'783214',
+                       u'language': u'en',
+                       u'link': u'https://twitter.com/twitter',
+                       u'location': {u'details': {u'city': u'San Francisco',
+                         u'continent_code': u'NA',
+                         u'country': u'United States',
+                         u'country_code': u'US',
+                         u'geonameid': u'5391959',
+                         u'population': 805235,
+                         u'score': 211,
+                         u'state': u'California',
+                         u'state_code': u'CA',
+                         u'type': u'city'},
+                        u'text': u'San Francisco, CA'},
+                       u'name': u'Twitter',
+                       u'stats': {u'favorites': 0,
+                        u'followers': 33790197,
+                        u'friends': 101,
+                        u'listed_count': 86778,
+                        u'statuses': 1852},
+                       u'status': u'active',
+                       u'timezone': {u'name': u'Pacific Time (US & Canada)',
+                        u'utc_offset': -28800},
+                       u'urls': [],
+                       u'username': u'twitter',
+                       u'verified': True,
+                       u'website': u'http://blog.twitter.com/'}},
+                     u'leadsift': {u'features': {u'active_time': u'MORNING',
+                       u'age': u'50+',
+                       u'brands': [{u'category': u'clothing', u'id': u'mattingly_sports'},
+                        {u'category': u'other', u'id': u'cnet'},
+                        {u'category': u'other', u'id': u'nbcuniversal'},
+                        {u'category': u'other', u'id': u'twitter'},
+                        {u'category': u'retail', u'id': u'amazon'},
+                        {u'category': u'services', u'id': u'comcast'},
+                        {u'category': u'websites', u'id': u'ars_technica'},
+                        {u'category': u'websites', u'id': u'engadget'},
+                        {u'category': u'websites', u'id': u'gizmodo'},
+                        {u'category': u'websites', u'id': u'nytimes'},
+                        {u'category': u'websites', u'id': u'readwrite'},
+                        {u'category': u'websites', u'id': u'techcrunch'},
+                        {u'category': u'websites', u'id': u'the_real_news'},
+                        {u'category': u'tvshows', u'id': u'the_ellen_degeneres_show'},
+                        {u'category': u'tvshows', u'id': u'jeopardy'},
+                        {u'category': u'tvshows', u'id': u'good_morning_america'}],
+                       u'devices': {u'desktop': {u'stats': {u'count': 2,
+                          u'ratio': 0.6666666666666666}},
+                        u'mobile': {u'stats': {u'count': 1, u'ratio': 0.3333333333333333}}},
+                       u'gender': u'unknown',
+                       u'has_car': False,
+                       u'has_family': False,
+                       u'has_house': False,
+                       u'has_job': False,
+                       u'has_kid': False,
+                       u'has_pet': False,
+                       u'interests': [{u'text': u'politics'},
+                        {u'text': u'beauty_fashion'},
+                        {u'text': u'books'},
+                        {u'text': u'technology'},
+                        {u'text': u'business'}],
+                       u'is_corporate': True,
+                       u'is_influencer': True,
+                       u'is_married': False,
+                       u'is_personal': False,
+                       u'is_teenager': False,
+                       u'life_events': [],
+                       u'lifestyle': [],
+                       u'professions': []}}},
+                    u'info': {u'message': u'ok'},
+                    u'request_id': u'19aa3ac4-700d-47f2-9c27-04dafe844d4a',
+                    u'status': 200}]},
+                 u'info': {u'message': u'ok'},
+                 u'request_id': u'b2947166-db49-4e72-95d6-f1ee92c9fa96',
+                 u'status': 200}    
+
