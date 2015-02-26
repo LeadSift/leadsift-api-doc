@@ -77,7 +77,7 @@ document like this to your callback url, given a **user_id** of _123456789_:
 # Group Insights
 These endpoints deliver demographic and consumer data for users of various social media networks.
 
-## Twitter User Insights [/insights/twitter{?user_id,username,webhook_url,webhook_id}]
+## Twitter User Insights [/insights/twitter/{?user_id,username,webhook_url,webhook_id}]
 ### Fetch consumer insights for a Twitter user [GET]
 Note that one of **user_id** or **username** is required, though supplying **user_id** is recommended whenever possible.  Twitter screen names may be changed at any time,
 which makes them somewhat less reliable than user ids.
@@ -190,7 +190,7 @@ which makes them somewhat less reliable than user ids.
               "request_id": "00000000-0000-0000-0000-000000000000"
             }
 
-## Instagram User Insights [/insights/instagram{?webhook_url,webhook_id}]
+## Instagram User Insights [/insights/instagram/{?webhook_url,webhook_id}]
 ### Deliver consumer insights for a Instagram user [POST]
 This endpoint requires clients to supply a webhook URL for results to be POST'ed to. The request should be sent with a JSON document payload containing data for the Instagram user to be processed.  The document supplied should adhere to the JSON request schema.
 #### Input JSON Schema
@@ -391,7 +391,7 @@ This endpoint requires clients to supply a webhook URL for results to be POST'ed
 + Response 202 (application/json)
     + Body
     
-## Batch Requests [/batch]
+## Batch Requests [/batch/]
 ### Run several requests in a batch [POST]
 The Batch Requests endpoint allows you to batch several API requests into a single request.  This endpoint will proxy up to 20 requests per batch for any
 other endpoint that accepts GET requests.  Any invalid endpoints (incorrect hostname, invalid endpoint, etc.) will be ignored.
@@ -406,8 +406,8 @@ other endpoint that accepts GET requests.  Any invalid endpoints (incorrect host
 
                 {
                     "requests": [
-                        "https://api.leadsift.com/1/insights/twitter?username=leadsift",
-                        "https://api.leadsift.com/1/insights/twitter?username=twitter"
+                        "https://api.leadsift.com/1/insights/twitter/?username=leadsift",
+                        "https://api.leadsift.com/1/insights/twitter/?username=twitter"
                     ]
                 }
 
