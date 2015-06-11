@@ -191,9 +191,109 @@ which makes them somewhat less reliable than user ids.
               "request_id": "00000000-0000-0000-0000-000000000000"
             }
 
-## Instagram User Insights [/insights/instagram{?webhook_url,webhook_id}]
-### Deliver consumer insights for a Instagram user [POST]
-This endpoint requires clients to supply a webhook URL for results to be POST'ed to. The request should be sent with a JSON document payload containing data for the Instagram user to be processed.  The document supplied should adhere to the JSON request schema.
+## Instagram User Insights [/insights/instagram{?user_id,username,webhook_url,webhook_id}]
+### Fetch consumer insights for an Instagram user [GET]
+Like the Twitter endpoint, one of **user_id** or **username** is required.  Supplying **user_id** is recommended whenever possible to ensure that the user can be fetched reliably.
+
++ Parameters
+    + user_id (optional, string, `515978659`) ... Twitter user id to be processed.
+    + username (optional, string, `johndoe`) ... Twitter screen name to be processed.
+    + webhook_url (optional, string, `http%3A%2F%2Fwww.example.com%2Fwebhook%2F`) ... Webhook URL - if provided, the result will be sent via HTTP POST to the url.  Must be URL-encoded.
+    + webhook_id (optional, string, `abc123`) ... Identifier sent along with result to the webhook url.  Must be URL-encoded
++ Request
+    + Headers
+    
+                Authorization: Token yourtoken
+
++ Response 200 (application/json)
+    + Body
+
+                {
+                  "status": 200,
+                  "info": {
+                    "message": "ok"
+                  },
+                  "data": {
+                    "leadsift": {
+                      "features": {
+                        "is_corporate": false,
+                        "interests": [],
+                        "has_job": false,
+                        "lifestyle": [
+                          {
+                            "text": "entrepreneurial"
+                          },
+                          {
+                            "text": "world_traveller"
+                          }
+                        ],
+                        "active_time": "AFTERNOON",
+                        "gender": "unknown",
+                        "has_kid": false,
+                        "is_married": false,
+                        "has_car": false,
+                        "life_events": [],
+                        "devices": {
+                          "desktop": {
+                            "stats": {
+                              "count": 1,
+                              "ratio": 1.0
+                            }
+                          }
+                        },
+                        "has_pet": false,
+                        "has_house": false,
+                        "is_personal": true,
+                        "is_teenager": false,
+                        "brands": [],
+                        "has_family": false,
+                        "age": "unknown",
+                        "professions": []
+                      }
+                    },
+                    "data": {
+                      "author": {
+                        "username": "leadsift",
+                        "bio": "",
+                        "stats": {
+                          "followers": 0,
+                          "friends": 0,
+                          "statuses": 8,
+                          "favorites": 0,
+                          "listed_count": 0
+                        },
+                        "name": "LeadSift",
+                        "language": "en",
+                        "created_at": "2015-06-11T00:00:00",
+                        "verified": false,
+                        "website": "",
+                        "status": "active",
+                        "avatar": {
+                          "http": "http://images.ak.instagram.com/profiles/profile_246727466_75sq_1351964991.jpg",
+                          "https": ""
+                        },
+                        "contributors": false,
+                        "urls": [],
+                        "link": "https://instagram.com/leadsift",
+                        "timezone": {
+                          "utc_offset": 0,
+                          "name": ""
+                        },
+                        "id": "246727466",
+                        "location": {
+                          "text": "",
+                          "details": {}
+                        }
+                      }
+                    }
+                  },
+                  "request_id": "386b6ab8-0191-4abf-a602-42d72a9c1841"
+                }
+
+
+## Generic User Insights [/insights/generic{?webhook_url,webhook_id}]
+### Deliver consumer insights for a generic social user [POST]
+This endpoint requires clients to supply a webhook URL for results to be POST'ed to. The request should be sent with a JSON document payload containing data for the user to be processed.  The document supplied must adhere to the following JSON request schema.
 #### Input JSON Schema
 
     {
