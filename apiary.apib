@@ -478,6 +478,23 @@ This endpoint requires clients to supply a webhook URL for results to be POST'ed
                           "type": "string",
                           "description": "User ID supplied by social media network"
                         }
+                        "coordinates": {
+                          "type": "object",
+                          "required": false,
+                          "description": "Geographic coordinates",
+                          "properties": {
+                            "longitude": {
+                              "type": "number",
+                              "description": "Longitude",
+                              "required": true
+                            },
+                            "latitude": {
+                              "type": "number",
+                              "description": "Latitude",
+                              "required": true
+                            }
+                          }
+                        }
                       }
                     }
                   },
